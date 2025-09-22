@@ -1,0 +1,7 @@
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\bin\CampusService.dll.config
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\bin\CampusService.dll
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\bin\CampusService.pdb
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\obj\Debug\CampusService.csproj.AssemblyReference.cache
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\obj\Debug\CampusService.csproj.CoreCompileInputs.cache
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\obj\Debug\CampusService.dll
+C:\Users\General\Downloads\nexified-group-project-master\nexified-group-project-master\obj\Debug\CampusService.pdb
