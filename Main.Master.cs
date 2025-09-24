@@ -9,46 +9,54 @@ namespace CampusBookMarket
 {
     public partial class Main : System.Web.UI.MasterPage
     {
-        bool trylogin = true;
-        bool tryReg = true;
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Example logic: if trying to login, show login button and hide register button; vice versa.
-           /* if (trylogin)
+            if (!IsPostBack)
             {
-                loginBtn.Visible = true;
-                registerBtn.Visible = false;
+                CheckUserSession();
             }
-            else if (tryReg)
+        }
+
+        private void CheckUserSession()
+        {
+            if (Session["UserEmail"] != null)
             {
-                loginBtn.Visible = false;
-                registerBtn.Visible = true;
+                pnlGuest.Visible = false;
+                pnlUser.Visible = true;
+                userWelcome.InnerText = "Welcome, " + Session["UserName"]?.ToString();
             }
             else
             {
-                // If neither, hide both buttons
-                loginBtn.Visible = false;
-                registerBtn.Visible = false;
-            }*/
+                pnlGuest.Visible = true;
+                pnlUser.Visible = false;
+            }
         }
-
 
         protected void loginBtn_Click(object sender, EventArgs e)
         {
-           // trylogin = true;
-           // tryReg = false;
-            Response.Redirect("login.aspx");
-            
+            Response.Redirect("Login.aspx");
         }
 
         protected void registerBtn_Click(object sender, EventArgs e)
         {
-           // tryReg = true;
-           // trylogin = false;
-           Response.Redirect("Register.aspx");
+            Response.Redirect("Register.aspx");
         }
 
-       
+        protected void btnProfile_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Profile.aspx");
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("index.aspx");
+        }
+
+        protected void btnAddProduct_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("AddProduct.aspx");
+        }
     }
 }

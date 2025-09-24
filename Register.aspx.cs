@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using HashPass;
 using CampusBookMarket.ServiceReference1;
 
 namespace CampusBookMarket
@@ -13,59 +10,52 @@ namespace CampusBookMarket
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            if (Session["UserEmail"] != null)
+            {
+                Response.Redirect("index.aspx");
+            }
         }
 
-
-       
-            
-        protected void btnRegister_Click(object sender, EventArgs e) 
+        protected void btnRegister_Click(object sender, EventArgs e)
         {
-
-                 Service1Client service = new Service1Client();
-                            //check for passwords
-            if (reg_password.Value != confirm_password.Value)
+            if (txtPassword.Text != txtConfirmPassword.Text)
             {
-                lblResponse.Visible = true;
-                lblResponse.Text = "Passwords Do No Match!";
-                lblResponse.ForeColor = System.Drawing.Color.Red;
+                lblMessage.Text = "Passwords do not match.";
+                return;
             }
-            //if they match
+
+            User newUser = new User
+            {
+                name = txtFullName.Text.Trim(),
+                email = txtEmail.Text.Trim(),
+                password = txtPassword.Text.Trim()
+            };
+
+            Service1Client client = new Service1Client();
+            int result = client.Register(newUser);
+
+            if (result == 0)
+            {
+                lblMessage.Text = "Registration successful! You can now login.";
+                lblMessage.CssClass = "success-message";
+                ClearForm();
+            }
+            else if (result == 1)
+            {
+                lblMessage.Text = "Email already exists. Please use a different email.";
+            }
             else
             {
-                //create a user
-                User u = new User();
-                u.name = fullname.Value;
-                u.email = reg_email.Value;
-                u.password = Secrecy.HashPassword(confirm_password.Value);
-
-                int response = service.Register(u);
-                //check response
-                if (response == 1)
-                {
-                    Response.Redirect("Login.aspx");
-
-                }
-                else if (response == 0)
-                {
-                    //successfully logged in
-                    lblResponse.Visible = true;
-                    lblResponse.Text = "Logged In Successfully..";
-                    lblResponse.ForeColor = System.Drawing.Color.Green;
-
-                }
-                else
-                {
-                    lblResponse.Visible = true;
-                    lblResponse.Text = "Something Went Wrong ..";
-                    lblResponse.ForeColor = System.Drawing.Color.Red;
-                }
-
-
-            }
-
-           
+                lblMessage.Text = "An error occurred. Please try again.";
             }
         }
+
+        private void ClearForm()
+        {
+            txtFullName.Text = "";
+            txtEmail.Text = "";
+            txtPassword.Text = "";
+            txtConfirmPassword.Text = "";
+        }
     }
-    
+}

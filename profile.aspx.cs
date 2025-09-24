@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -8,36 +6,44 @@ using CampusBookMarket.ServiceReference1;
 
 namespace CampusBookMarket
 {
-    public partial class profile : System.Web.UI.Page
+    public partial class Profile : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Service1Client service = new Service1Client();
             if (Session["UserEmail"] == null)
             {
-                // Not logged in
                 Response.Redirect("Login.aspx");
+                return;
             }
-            else
+
+            if (!IsPostBack)
             {
-                // Logged in: use session variables
-                string email = Session["UserEmail"].ToString();
-                string password = Session["UserPassword"].ToString();
-                
-                //get user
-                User u = service.getUser(password,email);
-
-                Namelbl.Text = u.name;
-                Emaillbl.Text = u.email;
-
-                // Fetch product using WCF
-               var p = service.GetProductByUserEmail(u.email);
-               
-                productNamelbl.Text = p?.name ?? "No product uploaded.";
-                   // lblStatus.Text = product?.ApprovalStatus ?? "Pending";
-                  //  lblStatus.CssClass += " " + (product?.ApprovalStatus ?? "pending").ToLower();
-                
+                LoadUserProfile();
+                LoadUserProducts();
             }
+        }
+
+        private void LoadUserProfile()
+        {
+            lblName.Text = Session["UserName"]?.ToString();
+            lblEmail.Text = Session["UserEmail"]?.ToString();
+        }
+
+        private void LoadUserProducts()
+        {
+            // This would need a new service method to get products by user ID
+            // For now, we'll show all products
+            Service1Client client = new Service1Client();
+            var products = client.GetProducts();
+            rptMyProducts.DataSource = products;
+            rptMyProducts.DataBind();
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            string productId = btn.CommandArgument;
+            Response.Redirect($"EditProduct.aspx?id={productId}");
         }
     }
 }

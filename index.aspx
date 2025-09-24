@@ -4,6 +4,118 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Essentials Market</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Everything You Need for University Life</h1>
+        <p>Textbooks, electronics, dorm essentials and more - all at student-friendly prices with exclusive auction deals!</p>
+
+        <div class="search-bar">
+            <asp:TextBox ID="txtSearch" runat="server" placeholder="Search for products..."></asp:TextBox>
+            <asp:Button ID="btnSearch" runat="server" Text="Search" OnClick="btnSearch_Click" CssClass="btn-search" />
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <h2 class="section-title">Shop by Category</h2>
+
+        <div class="category-filters">
+            <asp:LinkButton ID="btnAll" runat="server" CssClass="category-filter active" CommandArgument="All" OnClick="FilterProducts">All</asp:LinkButton>
+            <asp:LinkButton ID="btnTextbooks" runat="server" CssClass="category-filter" CommandArgument="Textbook" OnClick="FilterProducts">Textbooks</asp:LinkButton>
+            <asp:LinkButton ID="btnElectronics" runat="server" CssClass="category-filter" CommandArgument="Electronics" OnClick="FilterProducts">Electronics</asp:LinkButton>
+            <asp:LinkButton ID="btnDorm" runat="server" CssClass="category-filter" CommandArgument="Dorm Essential" OnClick="FilterProducts">Dorm Essentials</asp:LinkButton>
+            <asp:LinkButton ID="btnStationery" runat="server" CssClass="category-filter" CommandArgument="Stationery" OnClick="FilterProducts">Stationery</asp:LinkButton>
+        </div>
+
+        <div class="products">
+            <asp:Repeater ID="rptProducts" runat="server">
+                <ItemTemplate>
+                    <div class="product-card">
+                        <img src='<%# Eval("icon") %>' alt='<%# Eval("name") %>' class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=Product+Image'">
+                        <div class="product-info">
+                            <div class="product-category"><%# Eval("category") %></div>
+                            <h3 class="product-title"><%# Eval("name") %></h3>
+                            <div class="product-price">R<%# Convert.ToDecimal(Eval("price")).ToString("N2") %></div>
+                            <asp:Button ID="btnAddToCart" runat="server" Text="Add to Cart" CssClass="btn btn-add-to-cart" 
+                                CommandArgument='<%# Eval("Id") %>' OnClick="btnAddToCart_Click" />
+                            <asp:Button ID="btnViewDetails" runat="server" Text="View Details" CssClass="btn btn-view-details"
+                                CommandArgument='<%# Eval("Id") %>' OnClick="btnViewDetails_Click" />
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </section>
+
+    <!-- Auction Section -->
+    <section class="auction-section">
+        <h2 class="section-title">Auction Items - Bid Now!</h2>
+
+        <div class="auction-products">
+            <asp:Repeater ID="rptAuctionProducts" runat="server">
+                <ItemTemplate>
+                    <div class="product-card auction-card">
+                        <img src='<%# Eval("icon") %>' alt='<%# Eval("name") %>' class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=Product+Image'">
+                        <div class="product-info">
+                            <div class="product-category"><%# Eval("category") %></div>
+                            <h3 class="product-title"><%# Eval("name") %></h3>
+                            <div class="product-auction">Auction Item</div>
+                            <div class="product-price">Current Bid: R<%# Convert.ToDecimal(Eval("price")).ToString("N2") %></div>
+                            <div class="countdown" data-enddate='<%# Eval("dateBid", "{0:yyyy-MM-dd HH:mm:ss}") %>'>
+                                Time left: Calculating...
+                            </div>
+                            <div class="product-actions">
+                                <asp:Button ID="btnBid" runat="server" Text="Place Bid" CssClass="btn btn-bid" 
+                                    CommandArgument='<%# Eval("Id") %>' OnClick="btnBid_Click" />
+                                <asp:TextBox ID="txtBidAmount" runat="server" placeholder="Bid amount" CssClass="bid-amount"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </section>
+
+    <script>
+        // Countdown Timer for Auction Items
+        function updateCountdowns() {
+            const countdowns = document.querySelectorAll('.countdown[data-enddate]');
+            
+            countdowns.forEach((countdown) => {
+                const endDate = new Date(countdown.getAttribute('data-enddate'));
+                const now = new Date();
+                const timeLeft = endDate - now;
+
+                if (timeLeft <= 0) {
+                    countdown.textContent = "Auction ended!";
+                    countdown.style.color = "red";
+                    return;
+                }
+
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                countdown.textContent = `Time left: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdown.style.color = "#ff3860";
+            });
+        }
+
+        // Update countdowns every second
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns(); // Initial call
+    </script>
+</body>
+</html>
+</asp:Content>
+    <html>
+<head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

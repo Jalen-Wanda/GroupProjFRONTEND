@@ -25,6 +25,110 @@
 <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap"
   rel="stylesheet">
     <style>
+	/* Additional Styles */
+.form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-header h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #1a56db;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    background: #1a56db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1542b3;
+}
+
+.error-message {
+    color: #ff3860;
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.success-message {
+    color: #23d160;
+    display: block;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.search-bar {
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+}
+
+.btn-search {
+    background: #ffde59;
+    color: #1a56db;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.btn-view-details {
+    background: #23d160;
+    color: white;
+    margin-top: 0.5rem;
+}
+
+.bid-amount {
+    width: 100px;
+    margin-left: 0.5rem;
+}
+
+.user-welcome {
+    color: white;
+    margin-right: 1rem;
+}
+
+.btn-profile, .btn-logout, .btn-add-product {
+    margin-right: 0.5rem;
+}
             .form-container {
         max-width: 400px;
         margin: 2rem auto;
@@ -618,7 +722,24 @@
             <li><a href="profile.aspx">Profile</a></li>
            <li><a href="pickup.aspx">Pickups Points</a></li>
         </ul>
-
+<div class="nav-actions">
+    <asp:Panel ID="pnlGuest" runat="server">
+        <asp:Button ID="loginBtn" class="btn btn-login" runat="server" Text="Login" OnClick="loginBtn_Click" />
+        <asp:Button ID="registerBtn" class="btn btn-register" runat="server" Text="Register" OnClick="registerBtn_Click" />
+    </asp:Panel>
+    
+    <asp:Panel ID="pnlUser" runat="server" Visible="false">
+        <div class="user-welcome" id="userWelcome" runat="server"></div>
+        <asp:Button ID="btnProfile" class="btn btn-profile" runat="server" Text="Profile" OnClick="btnProfile_Click" />
+        <asp:Button ID="btnLogout" class="btn btn-logout" runat="server" Text="Logout" OnClick="btnLogout_Click" />
+        <asp:Button ID="btnAddProduct" class="btn btn-add-product" runat="server" Text="Sell Item" OnClick="btnAddProduct_Click" />
+    </asp:Panel>
+    
+    <div class="cart-icon" id="cartIcon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </div>
+</div>
         <div class="nav-actions">
             
             <asp:Button ID="loginBtn"  class="btn btn-login" runat="server" Text="Login" OnClick="loginBtn_Click"  />

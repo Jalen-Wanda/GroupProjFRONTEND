@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using HashPass;
 using CampusBookMarket.ServiceReference1;
 
 namespace CampusBookMarket
@@ -13,39 +10,39 @@ namespace CampusBookMarket
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            if (Session["UserEmail"] != null)
+            {
+                Response.Redirect("index.aspx");
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            Service1Client service = new Service1Client();
-            int response = 0;
-            response = service.Login(reg_email.Value, Secrecy.HashPassword(password.Value));
+            string email = txtEmail.Text.Trim();
+            string password = txtPassword.Text.Trim();
 
-            //user exist
-            if (response == 1)
+            Service1Client client = new Service1Client();
+            int result = client.Login(email, password);
+
+            if (result == 1)
             {
-                // ✅ Set session variables
-               
-                Session["UserEmail"] = reg_email.Value;
-                Session["UserPassword"] = Secrecy.HashPassword(password.Value);
-
-                Response.Redirect("index.aspx");
-                
-            
-
+                // Login successful
+                User user = client.getUser(password, email);
+                if (user != null)
+                {
+                    Session["UserId"] = user.Id;
+                    Session["UserName"] = user.name;
+                    Session["UserEmail"] = user.email;
+                    Response.Redirect("index.aspx");
+                }
             }
-            //user doesnt exist yet
-            else if (response == 0)
+            else if (result == 0)
             {
-                Response.Redirect("Register.aspx");
-
+                lblMessage.Text = "Invalid email or password.";
             }
             else
             {
-                lblResponse.Visible = true;
-                lblResponse.Text = "System Errors..";
-                lblResponse.ForeColor = System.Drawing.Color.Red;
+                lblMessage.Text = "An error occurred. Please try again.";
             }
         }
     }

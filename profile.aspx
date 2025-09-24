@@ -1,436 +1,264 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="profile.aspx.cs" Inherits="CampusBookMarket.profile" %>
+﻿<%@ Page Title="Profile" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="profile.aspx.cs" Inherits="CampusBookMarket.profile" %>
 
-<!--<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title>My Profile</title>
-    <link href="Styles/profile.css" rel="stylesheet" />
-    <style>body {
-    background-color: #f0f8ff;
-    font-family: Arial, sans-serif;
-    color: #003366;
-    margin: 0;
-    padding: 0;
-}
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .profile-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
 
-.profile-container {
-    width: 60%;
-    margin: 50px auto;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,128, 0.2);
-}
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
 
-h2 {
-    color: #005cbf;
-    text-align: center;
-    margin-bottom: 30px;
-}
+        .tab-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
 
-.profile-box {
-    font-size: 18px;
-    line-height: 1.8;
-}
+        .tab-headers {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
 
-.status {
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: inline-block;
-}
+        .tab-header {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
 
-.status.approved {
-    background-color: #d4edda;
-    color: #155724;
-}
+        .tab-header.active {
+            background: white;
+            border-bottom: 3px solid #007bff;
+            color: #007bff;
+        }
 
-.status.pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
+        .tab-content {
+            padding: 30px;
+            display: none;
+        }
 
-.status.rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-</style>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div class="profile-container">
-            <h2>Welcome, <asp:Label ID="lblName" runat="server" Text=""></asp:Label>!</h2>
-            <div class="profile-box">
-                <p><strong>Email:</strong> <asp:Label ID="lblEmail" runat="server" Text=""></asp:Label></p>
-                <p><strong>Product Name:</strong> <asp:Label ID="lblProductName" runat="server" Text=""></asp:Label></p>
-                <p><strong>Approval Status:</strong>
-                    <asp:Label ID="lblStatus" runat="server" CssClass="status"></asp:Label>
-                </p>
-            </div>
+        .tab-content.active {
+            display: block;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .btn-checkout {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+    </style>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="profile-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome, <asp:Label ID="lblUserName" runat="server" Text="User"></asp:Label>!</h1>
+            <p>Manage your account, products, and orders in one place</p>
         </div>
-    </form>
-</body>
-</html>-->
 
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Profile | Campus Essentials Market</title>
-
-  <!-- FontAwesome (for icons) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <style>
-    :root {
-      --primary-color: #0d6efd;
-      --secondary-color: #6c757d;
-      --success-color: #28a745;
-      --danger-color: #dc3545;
-      --warning-color: #ffc107;
-      --light-bg: #f8f9fa;
-      --border-color: #dee2e6;
-      --text-dark: #333;
-      --text-light: #666;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      color: var(--text-dark);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .profile-header {
-      background: linear-gradient(135deg, var(--primary-color), #0a58ca);
-      color: white;
-      padding: 40px 30px;
-      text-align: center;
-      position: relative;
-    }
-
-    .profile-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
-    }
-
-    .profile-header h2 {
-      font-size: 2.5rem;
-      font-weight: 300;
-      margin: 0 0 10px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-
-    .profile-header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin: 0;
-    }
-
-    .profile-content {
-      padding: 40px;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--primary-color);
-      margin-bottom: 25px;
-      padding-bottom: 10px;
-      border-bottom: 3px solid var(--light-bg);
-      position: relative;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -3px;
-      left: 0;
-      width: 60px;
-      height: 3px;
-      background: var(--primary-color);
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-
-    .info-card {
-      background: var(--light-bg);
-      border-radius: 12px;
-      padding: 25px;
-      border-left: 4px solid var(--primary-color);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .info-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .info-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .info-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .info-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--primary-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin-right: 15px;
-      flex-shrink: 0;
-    }
-
-    .info-content {
-      flex: 1;
-    }
-
-    .info-label {
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 5px;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .info-value {
-      font-size: 1.1rem;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-
-    .status-pending {
-      background: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeaa7;
-    }
-
-    .status-approved {
-      background: #d1edff;
-      color: var(--primary-color);
-      border: 1px solid #b3d9ff;
-    }
-
-    .status-rejected {
-      background: #f8d7da;
-      color: var(--danger-color);
-      border: 1px solid #f5c6cb;
-    }
-
-    .product-section {
-      background: var(--light-bg);
-      border-radius: 12px;
-      padding: 25px;
-      margin-top: 30px;
-    }
-
-    .product-info {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      
-      .profile-content {
-        padding: 20px;
-      }
-      
-      .profile-header {
-        padding: 30px 20px;
-      }
-      
-      .profile-header h2 {
-        font-size: 2rem;
-        flex-direction: column;
-        gap: 10px;
-      }
-      
-      .info-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .info-icon {
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-      
-      .product-info {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Animation for page load */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .container {
-      animation: fadeInUp 0.6s ease-out;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-    <div class="profile-header">
-      <h2>
-        <i class="fas fa-user-graduate"></i>
-        Student Profile
-      </h2>
-      <p>Welcome to your Campus Essentials Market dashboard</p>
-    </div>
-
-    <div class="profile-content">
-      <!-- Personal Information Section -->
-      <div class="section-title">Personal Information</div>
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="info-item">
-            <div class="info-icon">
-              <i class="fas fa-user"></i>
+        <!-- Tab Container -->
+        <div class="tab-container">
+            <div class="tab-headers">
+                <button class="tab-header active" onclick="switchTab('personal')">Personal Info</button>
+                <button class="tab-header" onclick="switchTab('selling')">My Products</button>
+                <button class="tab-header" onclick="switchTab('cart')">Shopping Cart</button>
+                <button class="tab-header" onclick="switchTab('orders')">My Orders</button>
             </div>
-            <div class="info-content">
-              <div class="info-label">Full Name</div>
-              <asp:Label ID="Namelbl" class="info-value" runat="server" Text=""></asp:Label>
-            </div>
-          </div>
 
-          <div class="info-item">
-            <div class="info-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <div class="info-content">
-              <div class="info-label">Email Address</div>
-              <asp:Label ID="Emaillbl" class="info-value" runat="server" Text=""></asp:Label>
-            </div>
-          </div>
-
-          <div class="info-item">
-            <div class="info-icon">
-              <i class="fas fa-lock"></i>
-            </div>
-            <div class="info-content">
-              <div class="info-label">Password</div>
-              <asp:Label ID="Passwordlbl" class="info-value" runat="server" Text=""></asp:Label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product Information Section -->
-      <div class="section-title">Product Information</div>
-      <div class="product-section">
-        <div class="product-info">
-          <div class="info-card">
-            <div class="info-item">
-              <div class="info-icon">
-                <i class="fas fa-cube"></i>
-              </div>
-              <div class="info-content">
-                <div class="info-label">Product Name</div>
-                <asp:Label ID="productNamelbl" class="info-value" runat="server" Text=""></asp:Label>
-              </div>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <div class="info-item">
-              <div class="info-icon">
-                <i class="fas fa-tasks"></i>
-              </div>
-              <div class="info-content">
-                <div class="info-label">Approval Status</div>
-                <asp:Label ID="Statuslbl" class="info-value" runat="server" Text=""></asp:Label>
-                <div class="status-badge status-pending">
-                  <i class="fas fa-clock"></i>
-                  <span>Pending Review</span>
+            <!-- Personal Info Tab -->
+            <div id="personal" class="tab-content active">
+                <h3>Personal Information</h3>
+                <div class="form-group">
+                    <label>Full Name:</label>
+                    <asp:Label ID="lblFullName" runat="server" CssClass="form-control-static"></asp:Label>
                 </div>
-              </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <asp:Label ID="lblEmail" runat="server" CssClass="form-control-static"></asp:Label>
+                </div>
+                <div class="form-group">
+                    <label>Member Since:</label>
+                    <asp:Label ID="lblMemberSince" runat="server" CssClass="form-control-static"></asp:Label>
+                </div>
             </div>
-          </div>
+
+            <!-- My Products Tab -->
+            <div id="selling" class="tab-content">
+                <h3>Products I'm Selling</h3>
+                <asp:Button ID="btnAddProduct" runat="server" Text="+ Add New Product" 
+                    CssClass="btn btn-primary" OnClick="btnAddProduct_Click" />
+                
+                <div class="product-grid">
+                    <asp:Repeater ID="rptMyProducts" runat="server">
+                        <ItemTemplate>
+                            <div class="product-card">
+                                <img src='<%# Eval("icon") %>' alt='<%# Eval("name") %>' class="product-image" 
+                                    onerror="this.src='https://via.placeholder.com/300x200?text=Product+Image'">
+                                <h4><%# Eval("name") %></h4>
+                                <p><strong>Price:</strong> R<%# Convert.ToDecimal(Eval("price")).ToString("N2") %></p>
+                                <p><strong>Status:</strong> 
+                                    <span class='status-badge status-<%# Eval("approvalStatus").ToString().ToLower() %>'>
+                                        <%# Eval("approvalStatus") %>
+                                    </span>
+                                </p>
+                                <p><strong>Category:</strong> <%# Eval("category") %></p>
+                                <asp:Button ID="btnEdit" runat="server" Text="Edit" CssClass="btn btn-sm btn-outline-primary"
+                                    CommandArgument='<%# Eval("Id") %>' OnClick="btnEdit_Click" />
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                    
+                    <asp:Label ID="lblNoProducts" runat="server" Text="You haven't listed any products yet." 
+                        CssClass="empty-state" Visible="false"></asp:Label>
+                </div>
+            </div>
+
+            <!-- Shopping Cart Tab -->
+            <div id="cart" class="tab-content">
+                <h3>Shopping Cart</h3>
+                <asp:Repeater ID="rptCart" runat="server">
+                    <ItemTemplate>
+                        <div class="cart-item">
+                            <img src='<%# Eval("Product.icon") %>' alt='<%# Eval("Product.name") %>' class="cart-item-image">
+                            <div style="flex: 1;">
+                                <h5><%# Eval("Product.name") %></h5>
+                                <p>R<%# Convert.ToDecimal(Eval("Product.price")).ToString("N2") %></p>
+                                <p>Quantity: <%# Eval("quantity") %></p>
+                            </div>
+                            <asp:Button ID="btnRemoveFromCart" runat="server" Text="Remove" CssClass="btn btn-danger btn-sm"
+                                CommandArgument='<%# Eval("Id") %>' OnClick="btnRemoveFromCart_Click" />
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+                
+                <asp:Label ID="lblEmptyCart" runat="server" Text="Your cart is empty." 
+                    CssClass="empty-state" Visible="false"></asp:Label>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <strong>Total: R<asp:Label ID="lblCartTotal" runat="server" Text="0.00"></asp:Label></strong>
+                    <br>
+                    <asp:Button ID="btnCheckout" runat="server" Text="Proceed to Checkout" 
+                        CssClass="btn-checkout" OnClick="btnCheckout_Click" />
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <h3>My Orders</h3>
+                <asp:Repeater ID="rptOrders" runat="server">
+                    <ItemTemplate>
+                        <div class="order-item" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                            <h5>Order #<%# Eval("Id") %> - <%# Eval("orderDate", "{0:dd MMM yyyy}") %></h5>
+                            <p><strong>Total: R<%# Convert.ToDecimal(Eval("totalAmount")).ToString("N2") %></strong></p>
+                            <p>Status: <span class='status-badge'><%# Eval("status") %></span></p>
+                            <asp:Button ID="btnViewInvoice" runat="server" Text="Download Invoice" 
+                                CssClass="btn btn-sm btn-outline-primary" CommandArgument='<%# Eval("Id") %>' 
+                                OnClick="btnViewInvoice_Click" />
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+                
+                <asp:Label ID="lblNoOrders" runat="server" Text="You haven't placed any orders yet." 
+                    CssClass="empty-state" Visible="false"></asp:Label>
+            </div>
         </div>
-      </div>
-
-      <!-- Additional space for future content -->
-      <div style="height: 40px;"></div>
     </div>
-  </div>
 
-  <script>
-    // Simple animation for status badges
-    document.addEventListener('DOMContentLoaded', function() {
-      const statusBadge = document.querySelector('.status-badge');
-      if (statusBadge) {
-        setTimeout(() => {
-          statusBadge.style.transform = 'scale(1.05)';
-          setTimeout(() => {
-            statusBadge.style.transform = 'scale(1)';
-          }, 300);
-        }, 1000);
-      }
-    });
-  </script>
-
-</body>
-</html>
-
-
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab headers
+            document.querySelectorAll('.tab-header').forEach(header => {
+                header.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate clicked tab header
+            event.target.classList.add('active');
+        }
+    </script>
+</asp:Content>
